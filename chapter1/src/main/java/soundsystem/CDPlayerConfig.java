@@ -1,12 +1,21 @@
 package soundsystem;
 
-import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
 
 @Configuration
-@ComponentScan(basePackageClasses = {CompactDisc.class}) // por defecto busca en el mismo paquete (y subpaquetes) de esta clase
 public class CDPlayerConfig {
 
+	@Bean
+	@Scope("singleton")
+	public CompactDisc elCuartetoDeNos() {
+		return new ElCuartetoDeNos();
+	}
 	
+	@Bean
+	public MediaPlayer cdPlayer(CompactDisc cd) {
+		return new CDPlayer(cd);
+	}
 	
 }

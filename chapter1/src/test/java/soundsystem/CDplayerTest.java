@@ -22,7 +22,7 @@ public class CDplayerTest {
 	private CompactDisc cd;
 	
 	@Autowired
-	private MediaPlayer player;
+	private CDPlayer player;
 	
 	@Test
 	public void cd_is_not_null() {
@@ -33,6 +33,11 @@ public class CDplayerTest {
 	public void play() {
 		player.play();
 		Assert.assertEquals("Playing Porfiado by El Cuarteto de Nos", log.getLog().trim());
+	}
+	
+	@Test
+	public void cd_bean_is_singleton() {
+		Assert.assertEquals(cd, player.getCd());
 	}
 	
 	//@Test

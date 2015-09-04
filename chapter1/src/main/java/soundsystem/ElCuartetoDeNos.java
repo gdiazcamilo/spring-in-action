@@ -1,8 +1,5 @@
 package soundsystem;
 
-import org.springframework.stereotype.Component;
-
-@Component("elCuartetoDeNos")
 public class ElCuartetoDeNos implements CompactDisc {
 
 	private String albumTitle = "Porfiado";
