@@ -12,7 +12,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class) // crea un application context cuando el test inicia
-@ContextConfiguration(classes = CDPlayerConfig.class) //especifica donde buscar la configuración
+@ContextConfiguration(classes = {CDPlayerConfig.class, CDConfig.class}) //especifica donde buscar la configuración
 public class CDplayerTest {
 
 	@Rule
@@ -38,14 +38,6 @@ public class CDplayerTest {
 	@Test
 	public void cd_bean_is_singleton() {
 		Assert.assertEquals(cd, player.getCd());
-	}
-	
-	//@Test
-	public void get_cd_instance_by_bean_name() {
-		ApplicationContext appContext = new AnnotationConfigApplicationContext();
-		CompactDisc cd = appContext.getBean("elCuartetoDeNos", CompactDisc.class);
-		
-		Assert.assertNotNull(cd);
 	}
 	
 	
