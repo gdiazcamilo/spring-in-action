@@ -5,8 +5,12 @@ public class ElCuartetoDeNos implements CompactDisc {
 	private String albumTitle = "Porfiado";
 	private String artists = "El Cuarteto de Nos";
 
-	public void play() {
+	public void playAlbum() {
 		System.out.println(String.format("Playing %s by %s", albumTitle, artists));
+	}
+
+	public void playSong() {
+		System.out.println(String.format("Playing  %s by %s", "'Nada mejor que hacer'", artists));
 	}
 	
 }
