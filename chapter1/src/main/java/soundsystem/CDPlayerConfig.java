@@ -9,8 +9,8 @@ import org.springframework.context.annotation.Import;
 public class CDPlayerConfig {
 
 	@Bean
-	public MediaPlayer cdPlayer(CompactDisc cd) {
-		return new CDPlayer(cd);
+	public MediaPlayer cdPlayer(CompactDisc cd, DVD dvd) {
+		return new CDPlayer(cd, dvd);
 	}
 	
 }

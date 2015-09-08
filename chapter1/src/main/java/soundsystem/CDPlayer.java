@@ -4,6 +4,14 @@ public class CDPlayer implements MediaPlayer {
 
 	private CompactDisc cd;		
 	
+	private DVD dvd;
+	
+	
+	
+	public DVD getDvd() {
+		return dvd;
+	}
+
 	public CompactDisc getCd() {
 		return cd;
 	}
@@ -12,8 +20,9 @@ public class CDPlayer implements MediaPlayer {
 		this.cd = cd;
 	}
 	
-	public CDPlayer(CompactDisc cd) {
+	public CDPlayer(CompactDisc cd, DVD dvd) {
 		this.cd = cd;
+		this.dvd = dvd;
 	}
 	
 	public void play(){
