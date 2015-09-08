@@ -17,7 +17,7 @@ public class DessertTest {
 	private Order order;
 	
 	@Autowired
-	@Qualifier("iceCream")
+	@Cold
 	private Dessert iceCream;
 	
 	@Autowired
