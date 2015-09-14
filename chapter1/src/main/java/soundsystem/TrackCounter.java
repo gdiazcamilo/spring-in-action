@@ -12,7 +12,7 @@ public class TrackCounter {
 
 	private HashMap<Integer, Integer> trackCounts = new HashMap<Integer, Integer>();
 	
-	@Pointcut("execution(* soundsystem.CompactDisc.playTrack(int)) && args(trackNumber)")
+	@Pointcut("execution(** soundsystem.CompactDisc.playTrack(int)) && args(trackNumber)")
 	public void trackPlayed(int trackNumber){}
 
 	@Around("trackPlayed(trackNumber)")
