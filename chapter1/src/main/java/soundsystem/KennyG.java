@@ -14,4 +14,9 @@ public class KennyG implements CompactDisc {
 		
 	}
 
+	public void playTrack(int trackNumber) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

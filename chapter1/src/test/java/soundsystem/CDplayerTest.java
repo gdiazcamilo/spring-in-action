@@ -64,6 +64,7 @@ public class CDplayerTest {
 	@Test(expected = IllegalStateException.class)
 	public void required_property_doesnt_existis() {
 		propertySvc.getRequiredProperty("none");
+		
 	}
 	
 }

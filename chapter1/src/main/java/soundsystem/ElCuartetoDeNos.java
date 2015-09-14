@@ -12,5 +12,10 @@ public class ElCuartetoDeNos implements CompactDisc {
 	public void playSong() {
 		System.out.println(String.format("Playing  %s by %s", "'Nada mejor que hacer'", artists));
 	}
+
+	public void playTrack(int trackNumber) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }
