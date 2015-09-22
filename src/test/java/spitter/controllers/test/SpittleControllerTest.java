@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.hamcrest.Matchers;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.test.web.servlet.MockMvc;
@@ -17,9 +18,10 @@ import spitter.web.SpittleController;
 import spittr.Spittle;
 import spittr.data.SpittleRepository;
 
+
 public class SpittleControllerTest {
 
-	@Test
+	@Test 
 	public void shouldShowRecentSpittles() throws Exception{
 		SpittleRepository spittleRepository = Mockito.mock(SpittleRepository.class);
 		List<Spittle> spittles = createSpittleList(20);
@@ -58,6 +60,20 @@ public class SpittleControllerTest {
 	}
 	
 	@Test
+	public void showSpittleById() throws Exception{
+		SpittleRepository spittleRepository = Mockito.mock(SpittleRepository.class);
+		Spittle spittle = new Spittle(new Date(), "Spittle 123");
+		Mockito.when(spittleRepository.findById(123L)).thenReturn(spittle);
+		
+		SpittleController spittleController = new SpittleController(spittleRepository);
+		MockMvc mockSpittleController = MockMvcBuilders.standaloneSetup(spittleController).build();
+		mockSpittleController.perform(MockMvcRequestBuilders.get("/spittles/123"))
+		.andExpect(MockMvcResultMatchers.view().name("spittle"))
+		.andExpect(MockMvcResultMatchers.model().attributeExists("spittle"))
+		.andExpect(MockMvcResultMatchers.model().attribute("spittle", spittle));
+	}
+	
+	@Test @Ignore
 	public void shouldShowPagedSpittles() throws Exception{
 		List<Spittle> spittles = createSpittleList(50);
 		SpittleRepository mockSpittleRepository = Mockito.mock(SpittleRepository.class);
