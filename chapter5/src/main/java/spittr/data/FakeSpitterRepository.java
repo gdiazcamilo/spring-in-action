@@ -1,10 +1,12 @@
 package spittr.data;
 
+import org.springframework.stereotype.Repository;
 import spittr.Spitter;
 
 /**
  * Created by elgut on 26/09/2015.
  */
+@Repository
 public class FakeSpitterRepository implements SpitterRepository {
 
     public Spitter save(Spitter spittler) {

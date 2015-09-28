@@ -1,4 +1,4 @@
-package spitter.web;
+package spittr.web;
 
 import java.util.List;
 
@@ -19,7 +19,7 @@ public class SpittleController {
 
 	private static final String MAX_LONG_AS_STRING = "9223372036854775807";
 
-    SpittleRepository spittleRepository;
+    private SpittleRepository spittleRepository;
 
 	@Autowired
 	public SpittleController(SpittleRepository spittleRepository) {

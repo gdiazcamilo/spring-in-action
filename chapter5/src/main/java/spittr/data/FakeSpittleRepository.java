@@ -1,5 +1,6 @@
 package spittr.data;
 
+import org.springframework.stereotype.Repository;
 import spittr.Spittle;
 
 import java.util.ArrayList;
@@ -9,6 +10,7 @@ import java.util.List;
 /**
  * Created by elgut on 26/09/2015.
  */
+@Repository
 public class FakeSpittleRepository implements SpittleRepository {
     public List<Spittle> findSpittles(long max, int count) {
         Spittle s1 = new Spittle(new Date(), "Spittle 1");

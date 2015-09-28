@@ -1,34 +1,43 @@
-package spitter.web;
+package spittr.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import spittr.Spitter;
 import spittr.data.SpitterRepository;
 
+import javax.validation.Valid;
+
 /**
  * Created by elgut on 26/09/2015.
  */
 @Controller
-@RequestMapping(value = "spitter")
+@RequestMapping(value = "/spitter")
 public class SpitterController {
-    SpitterRepository spitterRepository;
+    private SpitterRepository spitterRepository;
 
     @Autowired
-    public SpitterController(SpitterRepository spittlerRepository) {
-        this.spitterRepository = spittlerRepository;
+    public SpitterController(SpitterRepository spitterRepository) {
+        this.spitterRepository = spitterRepository;
     }
 
     @RequestMapping(value = "/register", method = RequestMethod.GET)
-    public String showRegistrationForm() {
+    public String showRegistrationForm(Model model) {
+        model.addAttribute("spitter", new Spitter());
         return "registerForm";
     }
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public String processRegistration(Spitter spitter){
+    public String processRegistration(@Valid Spitter spitter, Errors errors){
+
+        if(errors.hasErrors()) {
+            return "registerForm";
+        }
+
         spitterRepository.save(spitter);
 
         return "redirect:/spitter/" + spitter.getUserName();

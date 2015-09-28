@@ -1,13 +1,14 @@
 package spitter.controllers.test;
 
+import org.junit.Assert;
 import org.junit.Test;
-import org.mockito.Matchers;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import spitter.web.SpitterController;
+import spittr.web.SpitterController;
 import spittr.Spitter;
 import spittr.data.SpitterRepository;
 
@@ -24,6 +25,7 @@ public class SpitterControllerTest {
         MockMvc mockSpittleController = MockMvcBuilders.standaloneSetup(spittlerController).build();
 
         mockSpittleController.perform(MockMvcRequestBuilders.get("/spitter/register"))
+                .andExpect(MockMvcResultMatchers.model().attributeExists("spitter"))
                 .andExpect(MockMvcResultMatchers.view().name("registerForm"));
 
     }
@@ -46,7 +48,25 @@ public class SpitterControllerTest {
                 .param("password", "gd123"))
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/spitter/" + saved.getUserName()));
 
-        Mockito.verify(spittlerRepository, Mockito.atLeastOnce()).save(Matchers.eq(unsaved));
+        // capture arguments pass to save call.
+        ArgumentCaptor<Spitter> spitterArgumentCaptor = ArgumentCaptor.forClass(Spitter.class);
+        Mockito.verify(spittlerRepository, Mockito.atLeastOnce()).save(spitterArgumentCaptor.capture());
+
+        // assert save method was called using same arguments.
+        Assert.assertThat(spitterArgumentCaptor.getValue(), org.hamcrest.beans.SamePropertyValuesAs.samePropertyValuesAs(unsaved));
+    }
+
+    @Test
+    public void whenHasValidationFailsShouldReturnToRegisterForm() throws Exception {
+        SpitterRepository spittlerRepository = Mockito.mock(SpitterRepository.class);
+        SpitterController spittleController = new SpitterController(spittlerRepository);
+
+        MockMvc mockSpittleController = MockMvcBuilders.standaloneSetup(spittleController).build();
+
+        mockSpittleController.perform(MockMvcRequestBuilders.post("/spitter/register")
+                .param("userName", "gdiaz")
+                .param("password", "gd123"))
+                .andExpect(MockMvcResultMatchers.view().name("registerForm"));
     }
 
     @Test

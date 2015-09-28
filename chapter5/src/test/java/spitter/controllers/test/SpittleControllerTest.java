@@ -14,12 +14,9 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.view.InternalResourceView;
 
-import spitter.web.SpittleController;
-import spitter.web.SpitterController;
-import spittr.Spitter;
+import spittr.web.SpittleController;
 import spittr.Spittle;
 import spittr.data.SpittleRepository;
-import spittr.data.SpitterRepository;
 
 
 public class SpittleControllerTest {
@@ -76,7 +73,7 @@ public class SpittleControllerTest {
 		.andExpect(MockMvcResultMatchers.model().attribute("spittle", spittle));
 	}
 
-	@Test @Ignore
+	@Test
 	public void shouldShowPagedSpittles() throws Exception{
 		List<Spittle> spittles = createSpittleList(50);
 		SpittleRepository mockSpittleRepository = Mockito.mock(SpittleRepository.class);
@@ -90,7 +87,7 @@ public class SpittleControllerTest {
 		mockSpittleController.perform(MockMvcRequestBuilders.get("/spittles?max=238900&count=50"))
 		.andExpect(MockMvcResultMatchers.view().name("spittles"))
 		.andExpect(MockMvcResultMatchers.model().attributeExists("spittleList"))
-		.andExpect(MockMvcResultMatchers.model().attribute("spittleList", Matchers.hasItem(spittles.toArray())));
+		.andExpect(MockMvcResultMatchers.model().attribute("spittleList", Matchers.hasItems(spittles.toArray()) ));
 	}
 
 	private List<Spittle> createSpittleList(int spittlesNumber) {

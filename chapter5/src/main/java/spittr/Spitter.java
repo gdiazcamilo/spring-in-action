@@ -1,7 +1,8 @@
 package spittr;
 
-import com.sun.istack.internal.NotNull;
 
+
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 /**
@@ -43,12 +44,6 @@ public class Spitter {
         this.lastName = lastName;
         this.userName = userName;
         this.password = password;
-    }
-
-    @Override
-    public boolean equals(Object o){
-        Spitter s = (Spitter)o;
-        return s.getFirstName().equals(this.firstName);
     }
 
 
