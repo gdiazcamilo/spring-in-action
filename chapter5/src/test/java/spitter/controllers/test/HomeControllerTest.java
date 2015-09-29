@@ -15,7 +15,7 @@ public class HomeControllerTest {
 		MockMvc mockHomeController = MockMvcBuilders.standaloneSetup(homeController).build();
 		
 		mockHomeController.perform(MockMvcRequestBuilders.get("/"))
-		.andExpect(MockMvcResultMatchers.view().name("home"));
+		.andExpect(MockMvcResultMatchers.view().name("homePage"));
 	}
 	
 	@Test
@@ -23,7 +23,7 @@ public class HomeControllerTest {
 		HomeController homeController = new HomeController();
 		MockMvc mockHomeController = MockMvcBuilders.standaloneSetup(homeController).build();
 		
-		mockHomeController.perform(MockMvcRequestBuilders.get("/homepage"))
-		.andExpect(MockMvcResultMatchers.view().name("home"));
+		mockHomeController.perform(MockMvcRequestBuilders.get("/home"))
+		.andExpect(MockMvcResultMatchers.view().name("homePage"));
 	}
 }
