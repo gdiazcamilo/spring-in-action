@@ -4,13 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import spittr.Spitter;
 import spittr.data.SpitterRepository;
 
 import javax.validation.Valid;
+import java.io.File;
+import java.io.IOException;
 
 /**
  * Created by elgut on 26/09/2015.
@@ -32,10 +33,18 @@ public class SpitterController {
     }
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public String processRegistration(@Valid Spitter spitter, Errors errors){
+    public String processRegistration(
+            @RequestParam MultipartFile profilePicture,
+            @Valid Spitter spitter, Errors errors){
 
         if(errors.hasErrors()) {
             return "registerForm";
+        }
+
+        try {
+            profilePicture.transferTo(new File("/data/spittr/" + profilePicture.getOriginalFilename()));
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
         spitterRepository.save(spitter);
