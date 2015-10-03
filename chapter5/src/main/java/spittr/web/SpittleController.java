@@ -17,35 +17,41 @@ import spittr.data.SpittleRepository;
 @RequestMapping(value = { "/spittles" })
 public class SpittleController {
 
-	private static final String MAX_LONG_AS_STRING = "9223372036854775807";
+    private static final String MAX_LONG_AS_STRING = "9223372036854775807";
 
     private SpittleRepository spittleRepository;
 
-	@Autowired
-	public SpittleController(SpittleRepository spittleRepository) {
-		this.spittleRepository = spittleRepository;
-	}
+    @Autowired
+    public SpittleController(SpittleRepository spittleRepository) {
+        this.spittleRepository = spittleRepository;
+    }
 
     @RequestMapping(method = RequestMethod.GET)
-	public List<Spittle> spittles(
-			@RequestParam(value = "max", 
-						  defaultValue = MAX_LONG_AS_STRING) long max,
-			@RequestParam(value = "count",
-						  defaultValue = "20") int count) {
-		return spittleRepository.findSpittles(max, count);
-	}
-	
-	@RequestMapping(value = {"spittlesList"}, method = RequestMethod.GET)
-	public List<Spittle> spittlesList() {
-		return spittleRepository.findSpittles(Long.MAX_VALUE, 20);
-		//The view name is inferred from request mapping value.
-		//The list of spittles is added to the model automatically.
-		//The key of the added spittles list is inferred from the type, in this case: spittleList
-	}
-	
-	@RequestMapping(value = "/{spittleId}", method = RequestMethod.GET)
-	public String showSpittle(@PathVariable long spittleId, Model model) {
-		model.addAttribute("spittle", spittleRepository.findById(spittleId));
-		return "spittle";
-	}
+    public List<Spittle> spittles(
+            @RequestParam(value = "max",
+                          defaultValue = MAX_LONG_AS_STRING) long max,
+            @RequestParam(value = "count",
+                          defaultValue = "20") int count) {
+        return spittleRepository.findSpittles(max, count);
+    }
+
+    @RequestMapping(value = {"spittlesList"}, method = RequestMethod.GET)
+    public List<Spittle> spittlesList() {
+        return spittleRepository.findSpittles(Long.MAX_VALUE, 20);
+        //The view name is inferred from request mapping value.
+        //The list of spittles is added to the model automatically.
+        //The key of the added spittles list is inferred from the type, in this case: spittleList
+    }
+
+    @RequestMapping(value = "/{spittleId}", method = RequestMethod.GET)
+    public String showSpittle(@PathVariable long spittleId, Model model) {
+        Spittle spittle = spittleRepository.findById(spittleId);
+
+        if(spittle == null) {
+            throw new SpittleNotFoundException();
+        }
+
+        model.addAttribute("spittle", spittle);
+        return "spittle";
+    }
 }
