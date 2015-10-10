@@ -14,6 +14,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.view.InternalResourceView;
 
+import spittr.data.FakeSpittleRepository;
+import spittr.web.DuplicateSpittleException;
 import spittr.web.SpittleController;
 import spittr.Spittle;
 import spittr.data.SpittleRepository;
@@ -110,6 +112,32 @@ public class SpittleControllerTest {
 
         mockSpittleController.perform(MockMvcRequestBuilders.get("/spittles/0"))
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
+
+    @Test
+    public void ifSaveDuplicateMessageThrowException() throws Exception {
+        FakeSpittleRepository fakeSpittleRepository = new FakeSpittleRepository();
+        SpittleController spittleController = new SpittleController(fakeSpittleRepository);
+
+        MockMvc mockSpittleController = MockMvcBuilders.standaloneSetup(spittleController).build();
+        mockSpittleController.perform(
+                MockMvcRequestBuilders.post("/spittles/save")
+                .param("message", "primer spittle")
+                .param("longitude", "10")
+                .param("latitude", "10")).andExpect(MockMvcResultMatchers.view().name("error/duplicate"));
+    }
+
+    @Test
+    public void ifSavedRedirectToSpittles() throws Exception {
+        FakeSpittleRepository fakeSpittleRepository = new FakeSpittleRepository();
+        SpittleController spittleController = new SpittleController(fakeSpittleRepository);
+
+        MockMvc mockSpittleController = MockMvcBuilders.standaloneSetup(spittleController).build();
+        mockSpittleController.perform(
+                MockMvcRequestBuilders.post("/spittles/save")
+                        .param("message", "segundo spittle")
+                        .param("longitude", "10")
+                        .param("latitude", "10")).andExpect(MockMvcResultMatchers.redirectedUrl("/spittles"));
     }
 
 }

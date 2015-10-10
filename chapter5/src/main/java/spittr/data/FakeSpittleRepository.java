@@ -2,6 +2,7 @@ package spittr.data;
 
 import org.springframework.stereotype.Repository;
 import spittr.Spittle;
+import spittr.web.DuplicateSpittleException;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -25,5 +26,11 @@ public class FakeSpittleRepository implements SpittleRepository {
 
     public Spittle findById(Long id) {
         return new Spittle(new Date(), "Spittle " + id);
+    }
+
+    public void save(String message, Double latitude, Double longitude) {
+        if("primer spittle".equals(message)) {
+            throw new DuplicateSpittleException();
+        }
     }
 }
