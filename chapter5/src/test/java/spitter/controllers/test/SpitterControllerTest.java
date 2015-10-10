@@ -8,6 +8,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import spittr.data.FakeSpitterRepository;
 import spittr.web.SpitterController;
 import spittr.Spitter;
 import spittr.data.SpitterRepository;
@@ -41,12 +42,12 @@ public class SpitterControllerTest {
 
         MockMvc mockSpittleController = MockMvcBuilders.standaloneSetup(spittleController).build();
 
-        mockSpittleController.perform(MockMvcRequestBuilders.post("/spitter/register")
+        mockSpittleController.perform(MockMvcRequestBuilders.post("/spitter/registerNoPic")
                 .param("firstName", "Gustavo")
                 .param("lastName", "Diaz")
                 .param("userName", "gdiaz")
                 .param("password", "gd123"))
-                .andExpect(MockMvcResultMatchers.redirectedUrl("/spitter/" + saved.getUserName()));
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/spitter/" + unsaved.getUserName() + "?id=" + unsaved.getFirstName()));
 
         // capture arguments pass to save call.
         ArgumentCaptor<Spitter> spitterArgumentCaptor = ArgumentCaptor.forClass(Spitter.class);
@@ -63,7 +64,7 @@ public class SpitterControllerTest {
 
         MockMvc mockSpittleController = MockMvcBuilders.standaloneSetup(spittleController).build();
 
-        mockSpittleController.perform(MockMvcRequestBuilders.post("/spitter/register")
+        mockSpittleController.perform(MockMvcRequestBuilders.post("/spitter/registerNoPic")
                 .param("userName", "gdiaz")
                 .param("password", "gd123"))
                 .andExpect(MockMvcResultMatchers.view().name("registerForm"));
@@ -80,10 +81,25 @@ public class SpitterControllerTest {
         MockMvc mockSpitterController = MockMvcBuilders.standaloneSetup(spitterController).build();
 
         mockSpitterController.perform(MockMvcRequestBuilders.get("/spitter/" + spitterUser.getUserName()))
-                .andExpect(MockMvcResultMatchers.model().attribute("spitter", spitterUser))
                 .andExpect(MockMvcResultMatchers.model().attributeExists("spitter"))
                 .andExpect(MockMvcResultMatchers.view().name("profile"));
 
         Mockito.verify(spitterRepository, Mockito.atLeastOnce()).findByUsername(spitterUser.getUserName());
+    }
+
+    @Test
+    public void whenFlashAttributeIsPassedRepositoryIsNotCalled() throws Exception {
+        SpitterRepository fakeSpitterRepository = Mockito.mock(SpitterRepository.class);
+        Mockito.when(fakeSpitterRepository.findByUsername(Mockito.anyString())).thenReturn(new Spitter());
+        SpitterController spitterController = new SpitterController(fakeSpitterRepository);
+
+        MockMvc mockSpitterController = MockMvcBuilders.standaloneSetup(spitterController).build();
+
+        mockSpitterController.perform(MockMvcRequestBuilders.get("/spitter/gdiaz")
+                .flashAttr("spitter", new Spitter()))
+            .andExpect(MockMvcResultMatchers.model().attributeExists("spitter"))
+            .andExpect(MockMvcResultMatchers.view().name("profile"));
+
+        Mockito.verify(fakeSpitterRepository, Mockito.never()).findByUsername(Mockito.anyString());
     }
 }

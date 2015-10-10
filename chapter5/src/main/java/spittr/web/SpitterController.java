@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import spittr.Spitter;
 import spittr.data.SpitterRepository;
 
@@ -35,7 +36,8 @@ public class SpitterController {
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public String processRegistration(
             @RequestParam MultipartFile profilePicture,
-            @Valid Spitter spitter, Errors errors){
+            @Valid Spitter spitter,
+            Errors errors){
 
         if(errors.hasErrors()) {
             return "registerForm";
@@ -49,13 +51,37 @@ public class SpitterController {
 
         spitterRepository.save(spitter);
 
+        //This way is insecure:
         return "redirect:/spitter/" + spitter.getUserName();
     }
 
+    @RequestMapping(value = "/registerNoPic", method = RequestMethod.POST)
+    public String processRegistrationWithoutPicture(@Valid Spitter spitter,
+                                                    Errors errors,
+                                                    RedirectAttributes model) {
+        if(errors.hasErrors()) {
+            return "registerForm";
+        }
+
+        spitterRepository.save(spitter);
+
+        //This is recomended way (more secure)
+        model.addAttribute("id", spitter.getFirstName());
+        model.addAttribute("username", spitter.getUserName());
+        model.addFlashAttribute(spitter);
+        return "redirect:/spitter/{username}";
+    }
+
     @RequestMapping(value = "/{userName}", method = RequestMethod.GET)
-    public String showUserProfile(@PathVariable String userName, Model model) {
-        Spitter spitter = spitterRepository.findByUsername(userName);
-        model.addAttribute(spitter);
+    public String showUserProfile(@PathVariable String userName,
+                                  @RequestParam(value = "id", required = false) String id,
+                                  Model model) {
+
+        if(!model.containsAttribute("spitter")) {
+            Spitter spitter = spitterRepository.findByUsername(userName);
+            model.addAttribute(spitter);
+        }
+
         return "profile";
     }
 
