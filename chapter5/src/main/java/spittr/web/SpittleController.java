@@ -61,8 +61,8 @@ public class SpittleController {
         return "redirect:/spittles";
     }
 
-    @ExceptionHandler(DuplicateSpittleException.class)
+/*    @ExceptionHandler(DuplicateSpittleException.class)
     private String handDuplicateSpittleException() {
         return "error/duplicate";
-    }
+    }*/
 }

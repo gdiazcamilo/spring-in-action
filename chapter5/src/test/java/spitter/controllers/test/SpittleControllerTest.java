@@ -3,6 +3,7 @@ package spitter.controllers.test;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Properties;
 
 import org.hamcrest.Matchers;
 import org.junit.Ignore;
@@ -12,6 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
 import org.springframework.web.servlet.view.InternalResourceView;
 
 import spittr.data.FakeSpittleRepository;
@@ -119,12 +121,25 @@ public class SpittleControllerTest {
         FakeSpittleRepository fakeSpittleRepository = new FakeSpittleRepository();
         SpittleController spittleController = new SpittleController(fakeSpittleRepository);
 
-        MockMvc mockSpittleController = MockMvcBuilders.standaloneSetup(spittleController).build();
+        MockMvc mockSpittleController = MockMvcBuilders.standaloneSetup(spittleController)
+                .setHandlerExceptionResolvers(getSimpleMappingExceptionResolver())
+                .build();
+
         mockSpittleController.perform(
                 MockMvcRequestBuilders.post("/spittles/save")
                 .param("message", "primer spittle")
                 .param("longitude", "10")
                 .param("latitude", "10")).andExpect(MockMvcResultMatchers.view().name("error/duplicate"));
+
+    }
+
+    private SimpleMappingExceptionResolver getSimpleMappingExceptionResolver() {
+        SimpleMappingExceptionResolver simpleMappingExceptionResolver = new SimpleMappingExceptionResolver();
+        Properties mapping = new Properties();
+        mapping.put(DuplicateSpittleException.class.getName(), "error/duplicate");
+        simpleMappingExceptionResolver.setExceptionMappings(mapping);
+
+        return simpleMappingExceptionResolver;
     }
 
     @Test
